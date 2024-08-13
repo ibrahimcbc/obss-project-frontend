@@ -1,0 +1,97 @@
+/* App.css */
+
+/* Tüm sayfa için varsayılan stil ayarları */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #121212; /* Koyu arka plan rengi */
+  color: #FFFFFF; /* Açık metin rengi */
+  line-height: 1.6;
+}
+
+a {
+  color: #FFD700; /* Altın rengi linkler */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #FFFFFF;
+}
+
+button {
+  font-family: inherit;
+  background-color: #333333;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: #555555;
+}
+
+input[type="text"] {
+  font-family: inherit;
+  background-color: #333333;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  outline: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  background-color: #555555;
+}
+
+select {
+  font-family: inherit;
+  background-color: #333333;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+select:hover {
+  background-color: #555555;
+}
+
+/* Kök elementin yüksekliği sayfa yüksekliğine uysun */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Footer her zaman sayfanın altında kalmalı */
+footer {
+  margin-top: auto;
+}
+
+/* Grid sistemine yönelik genel ayarlar */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 5px;
+}

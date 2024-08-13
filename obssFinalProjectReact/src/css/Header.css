@@ -1,0 +1,23 @@
+/* Header.css */
+
+.hover-dropdown .menu {
+    display: none !important;
+}
+
+.hover-dropdown:hover .menu {
+    display: block !important;
+}
+
+.hover-dropdown {
+    width: 400px; /* Kategori genişliğini artır */
+    text-align: center;
+}
+
+.hover-dropdown .menu {
+    position: absolute;
+    margin-top: 0px;
+    background-color: white !important; /* Alt menünün arka plan rengini ayarlayın */
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    color: black;
+}
