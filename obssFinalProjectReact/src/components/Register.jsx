@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Form, Dropdown, Container } from 'semantic-ui-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         surname: '',
@@ -23,10 +26,26 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Form verilerini işleme kodu burada olacak (örn: API'ye gönderme)
-        console.log(formData);
+    
+        try {
+            // Role'ü Set<Role> olarak backend'e gönderin
+            const response = await axios.post('http://localhost:8080/api/users', {
+                name: formData.name,
+                surname: formData.surname,
+                username: formData.username,
+                password: formData.password,
+                email: formData.email,
+                roles: [{ name: formData.role }] // Role burada Set<Role> olarak gönderiliyor
+            });
+    
+            console.log('User registered successfully:', response.data);
+            navigate("/login");
+        } catch (error) {
+            console.error('Error registering user:', error);
+            alert("error")
+        }
     };
 
     return (
@@ -86,7 +105,7 @@ const Register = () => {
                     onChange={handleChange}
                     required
                 />
-                <Button type="submit" primary>
+                <Button type="submit" secondary>
                     Register
                 </Button>
             </Form>
