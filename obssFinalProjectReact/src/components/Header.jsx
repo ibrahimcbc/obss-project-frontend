@@ -10,6 +10,14 @@ const Header = () => {
         navigate('/login');
     };
 
+    const handleCategoryClick = (category) => {
+        navigate(`/?category=${category}`);
+    };
+
+    const handleTypeByCategoryClick = (category, type) => {
+        navigate(`/?category=${category}&type=${type}`);
+    };
+
     const clothingOptions = [
         { key: 'shorts', text: 'Shorts', value: 'shorts' },
         { key: 'tshirt', text: 'T-Shirt', value: 'tshirt' },
@@ -54,24 +62,54 @@ const Header = () => {
             </Menu>
             <Menu inverted attached="bottom">
                 <Container>
-                    <Dropdown item text="Clothing" className="hover-dropdown">
+                    <Dropdown item text="Clothing" className="hover-dropdown" onClick={() => handleCategoryClick('clothing')}>
                         <Dropdown.Menu>
                             {clothingOptions.map((option) => (
-                                <Dropdown.Item className='item' key={option.key} text={option.text} />
+                                <Dropdown.Item
+                                key={option.key}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Üst öğeye olan tıklama olayını durdurur
+                                    handleTypeByCategoryClick('clothing', option.value);
+                                    console.log('Category:', "clothing");
+                                    console.log('Type:', option.value);
+                                }}
+                            >
+                                {option.text}
+                            </Dropdown.Item>
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown item text="Electronic" className="hover-dropdown">
+                    <Dropdown item text="Electronic" className="hover-dropdown" onClick={() => handleCategoryClick('electronics')}>
                         <Dropdown.Menu>
                             {electronicOptions.map((option) => (
-                                <Dropdown.Item className='item' key={option.key} text={option.text} />
+                                <Dropdown.Item
+                                key={option.key}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Üst öğeye olan tıklama olayını durdurur
+                                    handleTypeByCategoryClick('electronics', option.value);
+                                    console.log('Category:', "elec");
+                                    console.log('Type:', option.value);
+                                }}
+                            >
+                                {option.text}
+                            </Dropdown.Item>
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown item text="Book" className="hover-dropdown">
+                    <Dropdown item text="Book" className="hover-dropdown" onClick={() => handleCategoryClick('books')}>
                         <Dropdown.Menu>
                             {bookOptions.map((option) => (
-                                <Dropdown.Item className='item' key={option.key} text={option.text} />
+                                <Dropdown.Item
+                                key={option.key}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Üst öğeye olan tıklama olayını durdurur
+                                    handleTypeByCategoryClick('books', option.value);
+                                    console.log('Category:', "book");
+                                    console.log('Type:', option.value);
+                                }}
+                            >
+                                {option.text}
+                            </Dropdown.Item>
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
