@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, Input, Dropdown, Button, Container } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
-import '../css/Header.css'; // Hover durumları için ek CSS dosyası
+import { jwtDecode } from "jwt-decode";
+import '../css/Header.css';
 
 const Header = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                setIsAuthenticated(true);
+                console.log(isAuthenticated);
+                setUserId(decoded.userId); // JWT'den userId'yi alın
+            } catch (error) {
+                console.error("Invalid token:", error);
+            }
+        }
+        console.log(isAuthenticated);
+    }, [isAuthenticated]);
+
     const handleProfileClick = () => {
-        navigate('/login');
+        if (isAuthenticated) {
+            navigate(`/products/users/${userId}`);
+        } else {
+            navigate('/login');
+        }
     };
 
     const handleCategoryClick = (category) => {
@@ -57,9 +79,9 @@ const Header = () => {
                     </Menu.Item>
                     <Menu.Menu position="right">
                         <Menu.Item>
-                            <Button primary onClick={handleProfileClick}>
-                                Profile
-                            </Button>
+                        <Button primary onClick={handleProfileClick}>
+                        {isAuthenticated ? "Profile" : "Login"}
+                        </Button>
                         </Menu.Item>
                     </Menu.Menu>
                 </Container>

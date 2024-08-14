@@ -37,3 +37,7 @@ export const sortProducts = async ({ sortBy, order }) => {
 export const getProductById = async (id) => {
     return await axios.get(`${BASE_URL}/products/${id}`);
 };
+
+export const getProductsByUserId = async (userId) => {
+    return await axios.get(`${BASE_URL}/products/users/${userId}`);
+};

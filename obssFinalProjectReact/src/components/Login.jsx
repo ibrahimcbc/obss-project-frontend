@@ -2,6 +2,7 @@ import React ,{ useState } from 'react';
 import { Form, Button, Container } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -14,25 +15,36 @@ const Login = () => {
         navigate('/register');
     };
 
-    const handleChange = (e, { name, value }) => {
+    const handleChange = (e) => {
         setFormData({
             ...formData,
-            [name]: value
+            [e.target.name]: e.target.value
         });
     };
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', formData);
-            console.log('Login successful:', response.data);
-            // Login başarılı olursa, kullanıcıyı ana sayfaya yönlendirebilirsiniz
-            navigate('/');
+            const response = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+    
+            if (response.ok) {
+                const data = await response.json(); // JSON yanıtını parse ediyoruz
+                console.log('Login successful:', data);
+                const token = data.token; // Token'ı alıyoruz
+                // Token'ı localStorage'a kaydet
+                localStorage.setItem("token", token);
+                navigate(`/`);
+            } else {
+                console.error("Login failed:", response.statusText);
+            }
         } catch (error) {
-            console.error('Error during login:', error.response.data);
-            // Hata durumunda bir mesaj gösterebilirsiniz
-            alert('Invalid username or password');
+            console.error("Login failed:", error);
         }
     };
 
@@ -43,6 +55,7 @@ const Login = () => {
                     label="Username"
                     placeholder="Enter your username"
                     name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     required
                 />
@@ -51,6 +64,7 @@ const Login = () => {
                     placeholder="Enter your password"
                     type="password"
                     name="password"
+                    value={formData.password}
                     onChange={handleChange}
                     required
                 />
@@ -58,7 +72,7 @@ const Login = () => {
                     <Button primary type="submit">
                         Login
                     </Button>
-                    <Button secondary onClick={handleRegisterClick}>
+                    <Button primary onClick={handleRegisterClick}>
                         Register
                     </Button>
                 </div>

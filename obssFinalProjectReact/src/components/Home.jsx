@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Image, Button, Grid, Container, Dropdown } from 'semantic-ui-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Card, Image, Grid, Container } from 'semantic-ui-react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import * as ProductService from '../services/ProductService';
+import SortBy from './SortBy';
+
+
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [sortOption, setSortOption] = useState('');
@@ -50,13 +53,6 @@ const Home = () => {
         fetchProducts();
     }, [location, sortOption]);
 
-    const sortOptions = [
-        { key: 'price-asc', text: 'Price: Low to High', value: { sortBy: 'price', order: 'asc' } },
-        { key: 'price-desc', text: 'Price: High to Low', value: { sortBy: 'price', order: 'desc' } },
-        { key: 'score-asc', text: 'Score: Low to High', value: { sortBy: 'averageScore', order: 'asc' } },
-        { key: 'score-desc', text: 'Score: High to Low', value: { sortBy: 'averageScore', order: 'desc' } },
-    ];
-
     const handleSortChange = (e, { value }) => {
         setSortOption(value);
     };
@@ -68,13 +64,7 @@ const Home = () => {
 
     return (
         <Container style={{ padding: '20px' }}>
-            <Dropdown
-                placeholder='Sort by'
-                selection
-                options={sortOptions}
-                onChange={handleSortChange}
-                style={{ marginBottom: '20px' }}
-            />
+            <SortBy onSortChange={handleSortChange} />
             <Grid>
                 <Grid.Row columns={4}>
                     {products.map(product => (
@@ -85,12 +75,14 @@ const Home = () => {
                                     <Card.Header>{product.title}</Card.Header>
                                     <Card.Meta>{product.category}</Card.Meta>
                                     <Card.Meta>${product.price}</Card.Meta>
+                                    <Card.Meta>
+                                        <Link to={`/products/users/${product.userId}`}>
+                                            User: {product.userId}
+                                        </Link>
+                                    </Card.Meta>
                                     <Card.Description>
                                         Average Score: {product.averageScore || 'N/A'} / 5
                                     </Card.Description>
-                                </Card.Content>
-                                <Card.Content extra>
-                                    <Button primary fluid>View Details</Button>
                                 </Card.Content>
                             </Card>
                         </Grid.Column>
