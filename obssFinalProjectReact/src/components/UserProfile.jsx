@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Grid, Header, Button, Card, Image } from 'semantic-ui-react';
-import { useParams } from 'react-router-dom';
-import * as jwt_decode from "jwt-decode";
+import { useParams, useNavigate } from 'react-router-dom';
+import {jwtDecode} from "jwt-decode";
 import * as ProductService from '../services/ProductService';
 import * as UserService from '../services/UserService';
 
 const UserProfile = () => {
+    const navigate = useNavigate(); 
     const { userId } = useParams();
     const [user, setUser] = useState(null);
     const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ const UserProfile = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            const decodedToken = jwt_decode.default(token);
+            const decodedToken = jwtDecode(token);
             if (decodedToken.sub === userId) {
                 setIsOwner(true);
             }
@@ -51,7 +52,7 @@ const UserProfile = () => {
                         <Header as='h2'>Average Review Score: {user.averageScore}</Header>
                         <Button color='red'>Block User</Button>
                         <Button secondary>Follow</Button>
-                        {isOwner && <Button primary>Add Product</Button>}
+                        {isOwner && <Button primary onClick={() => navigate('/add-product')}>Add Product</Button>}
                     </Grid.Column>  
                 </Grid.Row>
             </Grid>
@@ -65,7 +66,7 @@ const UserProfile = () => {
                                     <Card.Header>{product.title}</Card.Header>
                                     <Card.Meta>${product.price}</Card.Meta>
                                     <Card.Description>
-                                        Average Score: {product.averageScore || 'N/A'} / 5
+                                        Average Score: {product.score || 'N/A'} / 5
                                     </Card.Description>
                                 </Card.Content>
                             </Card>

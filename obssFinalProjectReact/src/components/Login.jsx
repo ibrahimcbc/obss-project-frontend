@@ -5,48 +5,31 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-    });
+
 
     const handleRegisterClick = () => {
         navigate('/register');
     };
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+            const response = await axios.post('http://localhost:8080/api/auth/login', {
+                username,
+                password
             });
-    
-            if (response.ok) {
-                const data = await response.json(); // JSON yanıtını parse ediyoruz
-                console.log('Login successful:', data);
-                const token = data.token; // Token'ı alıyoruz
-                // Token'ı localStorage'a kaydet
-                localStorage.setItem("token", token);
-                navigate(`/`);
-            } else {
-                console.error("Login failed:", response.statusText);
-            }
+            const token = response.data; // Token'ı alıyoruz
+            localStorage.setItem('token', token); // Token'ı localStorage'da saklıyoruz
+            navigate('/'); // Giriş başarılıysa ana sayfaya yönlendiriyoruz
         } catch (error) {
             console.error("Login failed:", error);
+            alert('Login failed. Please check your credentials.');
         }
     };
+
 
     return (
         <Container textAlign="center" style={{ padding: '50px 0', minHeight: '80vh' }}>
@@ -55,8 +38,8 @@ const Login = () => {
                     label="Username"
                     placeholder="Enter your username"
                     name="username"
-                    value={formData.username}
-                    onChange={handleChange}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)} 
                     required
                 />
                 <Form.Input
@@ -64,8 +47,8 @@ const Login = () => {
                     placeholder="Enter your password"
                     type="password"
                     name="password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)} 
                     required
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>

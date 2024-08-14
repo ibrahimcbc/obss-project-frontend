@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Input, Dropdown, Button, Container } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
+import { Container, Menu, Input, Button, Dropdown } from 'semantic-ui-react';
 import '../css/Header.css';
 
 const Header = () => {
@@ -10,19 +10,18 @@ const Header = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (token) {
             try {
                 const decoded = jwtDecode(token);
                 setIsAuthenticated(true);
-                console.log(isAuthenticated);
                 setUserId(decoded.userId); // JWT'den userId'yi alın
             } catch (error) {
                 console.error("Invalid token:", error);
             }
         }
-        console.log(isAuthenticated);
-    }, [isAuthenticated]);
+    }, []);
+
 
     const handleProfileClick = () => {
         if (isAuthenticated) {
