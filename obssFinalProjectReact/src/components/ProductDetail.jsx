@@ -1,84 +1,65 @@
-import React from 'react';
-import { Container, Image, Button, Header, Icon, Label, Segment, Divider } from 'semantic-ui-react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import * as ProductService from '../services/ProductService';
+import { Container, Image, Header, Button, Grid, Segment } from 'semantic-ui-react';
 
 const ProductDetail = () => {
-    const product = {
-        name: 'Product Name',
-        averageScore: 4.5,
-        ownerUsername: 'OwnerUsername',
-        price: 99.99,
-        imageUrl: 'https://via.placeholder.com/150',
-        explanation: 'This is the explanation of the product.',
-        tags: ['Category', 'Type'],
-        reviews: [
-            {
-                username: 'User1',
-                title: 'Great Product!',
-                description: 'Really enjoyed using this product. Highly recommended.',
-                score: 5,
-            },
-            {
-                username: 'User2',
-                title: 'Not Bad',
-                description: 'It works as expected, but I have seen better.',
-                score: 3,
-            },
-        ],
-    };
+    const { id } = useParams();
+    const [product, setProduct] = useState(null);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await ProductService.getProductById(id);
+                setProduct(response.data);
+            } catch (error) {
+                console.error('Error fetching product:', error);
+            }
+        };
+
+        fetchProduct();
+    }, [id]);
+
+    if (!product) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <Container style={{ paddingTop: '20px', paddingBottom: '20px' }}>
-            <Segment>
-                <div style={{ display: 'flex', alignItems: 'center', color: 'black' }}>
-                    <Image src={product.imageUrl} size='medium' />
-                    <div style={{ marginLeft: '20px', flexGrow: 1 }}>
-                        <Header as='h2'>{product.name}</Header>
-                        <p>Average Score: {product.averageScore} / 5</p>
-                        <p>
-                            <Icon name='user' />
-                            {product.ownerUsername}
-                        </p>
-                        <p>
-                            <Icon name='dollar sign' />
-                            {product.price}
-                        </p>
-                        <div style={{ marginTop: '10px' }}>
-                            <Button primary>Add to Card</Button>
-                            <Button secondary>Recommend</Button>
-                            <Button>Add to Favorites</Button>
-                        </div>
-                    </div>
-                </div>
-                <Divider />
-                <div style={{ marginTop: '20px', color: 'black' }}>
-                    <Header as='h3'>Product Explanation</Header>
-                    <p>{product.explanation}</p>
-                    <div style={{ marginTop: '10px' }}>
-                        {product.tags.map((tag, index) => (
-                            <Label key={index} color='blue' size='large'>
-                                {tag}
-                            </Label>
-                        ))}
-                    </div>
-                </div>
-                <Divider />
-                <div style={{ marginTop: '20px' }}>
-                    <Header as='h3'>Reviews</Header>
-                    {product.reviews.map((review, index) => (
-                        <Segment key={index} style={{ marginTop: '10px' }}>
-                            <Header as='h4'>{review.title}</Header>
-                            <p>{review.description}</p>
-                            <p>
-                                <strong>{review.username}</strong> - {review.score}/5
-                            </p>
+        <Container style={{ padding: '20px' }}>
+            <Grid>
+                <Grid.Row>
+                    <Grid.Column width={6}>
+                        <Image src={product.imageUrl || 'https://via.placeholder.com/150'} size='large' />
+                    </Grid.Column>
+                    <Grid.Column width={10}>
+                        <Header as='h1'>{product.title}</Header>
+                        <Header as='h3'>Owner: {product.ownerUsername}</Header>
+                        <Header as='h4'>Price: ${product.price}</Header>
+                        <Header as='h4'>Average Score: {product.averageScore} / 5</Header>
+                        <Button primary>Add to Bucket</Button>
+                        <Button secondary>Add to Favorites</Button>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width={16}>
+                        <Segment>
+                            <Header as='h3'>Product Explanation</Header>
+                            <p style={{color:"black"}}>{product.explanation}</p>
+                            <Header as='h4'>Product Tags</Header>
+                            <p style={{color:"black"}}>Category: {product.dtype}</p>
+                            <p style={{color:"black"}}>Type: {product.category}</p>
                         </Segment>
-                    ))}
-                    <Button icon labelPosition='left' primary style={{ marginTop: '20px' }}>
-                        <Icon name='plus' />
-                        Add Review
-                    </Button>
-                </div>
-            </Segment>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width={16}>
+                        <Segment>
+                            <Header as='h3'>Reviews</Header>
+                            {/* Review componentleri buraya gelecek */}
+                        </Segment>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
         </Container>
     );
 };

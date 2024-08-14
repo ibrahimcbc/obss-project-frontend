@@ -26,31 +26,37 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-    
         try {
-            // Role'ü Set<Role> olarak backend'e gönderin
-            const response = await axios.post('http://localhost:8080/api/users', {
+            // İlk olarak rolü oluştur
+            const roleResponse = await axios.post('http://localhost:8080/api/roles', {
+                name: formData.role
+            });
+
+            const roleId = roleResponse.data.id;
+
+            // Ardından kullanıcıyı oluştur
+            const userResponse = await axios.post('http://localhost:8080/api/users', {
                 name: formData.name,
                 surname: formData.surname,
                 username: formData.username,
                 password: formData.password,
                 email: formData.email,
-                roles: [{ name: formData.role }] // Role burada Set<Role> olarak gönderiliyor
+                roles: [{ id: roleId, name: formData.role }] // Role'ü user'a ekle
             });
-    
-            console.log('User registered successfully:', response.data);
-            navigate("/login");
+
+            console.log('User registered successfully:', userResponse.data);
+            navigate('/login'); // Başarılı kayıt sonrası login sayfasına yönlendirme
         } catch (error) {
             console.error('Error registering user:', error);
-            alert("error")
+            alert('An error occurred during registration.');
         }
     };
 
     return (
         <Container text>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleRegister}>
                 <Form.Input
                     label="Name"
                     placeholder="Name"
@@ -105,12 +111,11 @@ const Register = () => {
                     onChange={handleChange}
                     required
                 />
-                <Button type="submit" secondary>
+                <Button type="submit" primary>
                     Register
                 </Button>
             </Form>
         </Container>
     );
 };
-
 export default Register;

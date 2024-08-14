@@ -18,6 +18,10 @@ const Header = () => {
         navigate(`/?category=${category}&type=${type}`);
     };
 
+    const handleNameClick = () => {
+        navigate(`/`);
+    }
+
     const clothingOptions = [
         { key: 'shorts', text: 'Shorts', value: 'shorts' },
         { key: 'tshirt', text: 'T-Shirt', value: 'tshirt' },
@@ -43,7 +47,7 @@ const Header = () => {
         <div>
             <Menu inverted attached="top">
                 <Container>
-                    <Menu.Item header>Company Name</Menu.Item>
+                    <Menu.Item header onClick={handleNameClick}>Company Name</Menu.Item>
                     <Menu.Item style={{ flexGrow: 1 }}>
                         <Input
                             icon="search"

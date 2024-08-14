@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Image, Button, Grid, Container } from 'semantic-ui-react';
-import { useLocation } from 'react-router-dom';
+import { Card, Image, Button, Grid, Container, Dropdown } from 'semantic-ui-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as ProductService from '../services/ProductService';
 const Home = () => {
     const [products, setProducts] = useState([]);
+    const [sortOption, setSortOption] = useState('');
     const location = useLocation();
+    const navigate= useNavigate();
 
     useEffect(() => {
         const query = new URLSearchParams(location.search);
@@ -14,9 +16,7 @@ const Home = () => {
         const fetchProducts = async () => {
             try {
                 let response;
-        
                 if (category && type) {
-                    // Eğer hem kategori hem de tür seçilmişse
                     if (category === 'clothing') {
                         response = await ProductService.getClothingByCategory(type);
                     } else if (category === 'electronics') {
@@ -25,7 +25,6 @@ const Home = () => {
                         response = await ProductService.getBooksByCategory(type);
                     }
                 } else if (category) {
-                    // Sadece kategori seçilmişse
                     if (category === 'clothing') {
                         response = await ProductService.getAllClothing();
                     } else if (category === 'electronics') {
@@ -36,6 +35,10 @@ const Home = () => {
                 } else {
                     response = await ProductService.getAllProducts();
                 }
+
+                if (sortOption) {
+                    response = await ProductService.sortProducts(sortOption);
+                }
         
                 setProducts(response.data);
             } catch (error) {
@@ -45,16 +48,38 @@ const Home = () => {
         
 
         fetchProducts();
-    }, [location]);
+    }, [location, sortOption]);
+
+    const sortOptions = [
+        { key: 'price-asc', text: 'Price: Low to High', value: { sortBy: 'price', order: 'asc' } },
+        { key: 'price-desc', text: 'Price: High to Low', value: { sortBy: 'price', order: 'desc' } },
+        { key: 'score-asc', text: 'Score: Low to High', value: { sortBy: 'averageScore', order: 'asc' } },
+        { key: 'score-desc', text: 'Score: High to Low', value: { sortBy: 'averageScore', order: 'desc' } },
+    ];
+
+    const handleSortChange = (e, { value }) => {
+        setSortOption(value);
+    };
+
+    const handleCardClick = (id) => {
+        navigate(`/product/${id}`);
+    };
+
 
     return (
         <Container style={{ padding: '20px' }}>
-            <h2>Product List</h2>
+            <Dropdown
+                placeholder='Sort by'
+                selection
+                options={sortOptions}
+                onChange={handleSortChange}
+                style={{ marginBottom: '20px' }}
+            />
             <Grid>
                 <Grid.Row columns={4}>
                     {products.map(product => (
                         <Grid.Column key={product.id} style={{ marginBottom: '20px' }}>
-                            <Card>
+                            <Card onClick={() => handleCardClick(product.id)}>
                                 <Image src={product.imageUrl || 'https://via.placeholder.com/150'} wrapped ui={false} />
                                 <Card.Content>
                                     <Card.Header>{product.title}</Card.Header>

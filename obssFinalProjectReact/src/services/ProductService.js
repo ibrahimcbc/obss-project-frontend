@@ -29,3 +29,11 @@ export const getElectronicsByCategory = async (category) => {
 export const getBooksByCategory = async (category) => {
     return await axios.get(`${BASE_URL}/books/category/${category}`);
 };
+
+export const sortProducts = async ({ sortBy, order }) => {
+    return await axios.get(`${BASE_URL}/products/sort?sortBy=${sortBy}&order=${order}`);
+};
+
+export const getProductById = async (id) => {
+    return await axios.get(`${BASE_URL}/products/${id}`);
+};
