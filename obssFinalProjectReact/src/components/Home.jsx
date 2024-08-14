@@ -81,7 +81,7 @@ const Home = () => {
                                         </Link>
                                     </Card.Meta>
                                     <Card.Description>
-                                        Average Score: {product.averageScore || 'N/A'} / 5
+                                        Average Score: {product.score || 'N/A'} / 5
                                     </Card.Description>
                                 </Card.Content>
                             </Card>
