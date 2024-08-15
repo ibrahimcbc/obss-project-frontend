@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card, Image, Grid, Container } from 'semantic-ui-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import * as ProductService from '../services/ProductService';
 import SortBy from './SortBy';
+import { AuthContext } from '../AuthContext';
 
 
 const Home = () => {
+    const { userId, isAuthenticated } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
     const [sortOption, setSortOption] = useState('');
     const location = useLocation();
@@ -19,6 +21,13 @@ const Home = () => {
         const fetchProducts = async () => {
             try {
                 let response;
+
+                if (isAuthenticated) {
+                    response = await ProductService.getFilteredProducts(userId);
+                } else {
+                    response = await ProductService.getAllProducts();
+                }
+
                 if (category && type) {
                     if (category === 'clothing') {
                         response = await ProductService.getClothingByCategory(type);
@@ -52,7 +61,7 @@ const Home = () => {
         
 
         fetchProducts();
-    }, [location, sortOption]);
+    }, [location, sortOption, userId, isAuthenticated]);
 
     const handleSortChange = (value) => setSortOption(value);
 

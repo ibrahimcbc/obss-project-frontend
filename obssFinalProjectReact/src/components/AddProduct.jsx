@@ -66,6 +66,7 @@ const AddProduct = () => {
                 productData,
             );
             console.log("Product added successfully:", response.data);
+            alert("Product added successfully");
             //navigate('/');  // İşlem başarıyla tamamlandığında yönlendirme yapın
         } catch (error) {
             console.error("Error adding product:", error);
