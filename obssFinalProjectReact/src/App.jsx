@@ -9,6 +9,7 @@ import 'semantic-ui-css/semantic.min.css';
 import AddProduct from './components/AddProduct';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import AuthProvider from './AuthContext';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
     }, []);
 
     return (
+        <AuthProvider>
         <Router>
             <Routes>
                 <Route path="/" element={<Layout />}>
@@ -36,6 +38,7 @@ function App() {
                 </Route>
             </Routes>
         </Router>
+        </AuthProvider>
     );
 }
 export default App;

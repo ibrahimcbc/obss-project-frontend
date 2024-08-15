@@ -21,9 +21,19 @@ const Login = () => {
                 username,
                 password
             });
-            const token = response.data; // Token'ı alıyoruz
+            const token = response.data.token; // Token'ı JSON içinden alıyoruz
             localStorage.setItem('token', token); // Token'ı localStorage'da saklıyoruz
+            const decodedToken = jwtDecode(token);
+            console.log('Decoded Token:', decodedToken);
+            // Örnek olarak, kullanıcı bilgilerini alabiliriz
+            const userId = decodedToken.userId;
+            const roles = decodedToken.roles;
+
+            // Token ile diğer kullanıcı bilgilerini kullanarak uygulamanın durumu güncelleyebilirsiniz
+            console.log('UserId:', userId);
+            console.log('Roles:', roles);
             navigate('/'); // Giriş başarılıysa ana sayfaya yönlendiriyoruz
+            window.location.reload();
         } catch (error) {
             console.error("Login failed:", error);
             alert('Login failed. Please check your credentials.');

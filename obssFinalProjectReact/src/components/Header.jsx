@@ -1,27 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from '../AuthContext'; 
 import { Container, Menu, Input, Button, Dropdown } from 'semantic-ui-react';
 import '../css/Header.css';
 
 const Header = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userId, setUserId] = useState(null);
+    const { isAuthenticated, userId } = useContext(AuthContext);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                setIsAuthenticated(true);
-                setUserId(decoded.userId); // JWT'den userId'yi alın
-            } catch (error) {
-                console.error("Invalid token:", error);
-            }
-        }
-    }, []);
-
 
     const handleProfileClick = () => {
         if (isAuthenticated) {
