@@ -30,7 +30,10 @@ export const getBooksByCategory = async (category) => {
     return await axios.get(`${BASE_URL}/book/category/${category}`);
 };
 
-export const sortProducts = async ({ sortBy, order }) => {
+export const sortProducts = async (sortOption) => { // Destructuring yerine doğrudan al
+    console.log('sorting:', sortOption); // Debugging line
+    if (!sortOption) throw new Error('sortOption is undefined'); // Hata fırlat
+    const [sortBy, order] = sortOption.split('-'); // Destructuring kullanarak ayır
     return await axios.get(`${BASE_URL}/products/sort?sortBy=${sortBy}&order=${order}`);
 };
 

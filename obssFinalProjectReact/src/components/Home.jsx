@@ -40,12 +40,13 @@ const Home = () => {
                 }
 
                 if (sortOption) {
+                    console.log('Sort Option:', sortOption); // Debugging line
                     response = await ProductService.sortProducts(sortOption);
                 }
         
                 setProducts(response.data);
             } catch (error) {
-                console.error('Error fetching products:', error.response);
+                console.error('Error fetching products:', error.message);
             }
         };
         
@@ -53,9 +54,7 @@ const Home = () => {
         fetchProducts();
     }, [location, sortOption]);
 
-    const handleSortChange = (e, { value }) => {
-        setSortOption(value);
-    };
+    const handleSortChange = (value) => setSortOption(value);
 
     const handleCardClick = (id) => {
         navigate(`/product/${id}`);
