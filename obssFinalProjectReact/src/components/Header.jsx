@@ -5,8 +5,15 @@ import { Container, Menu, Input, Button, Dropdown } from 'semantic-ui-react';
 import '../css/Header.css';
 
 const Header = () => {
-    const { isAuthenticated, userId } = useContext(AuthContext);
+    const { isAuthenticated, userId, setIsAuthenticated } = useContext(AuthContext); // AuthContext'ten gerekli bilgileri al
     const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Token'ı sil
+        setIsAuthenticated(false); // Kullanıcı durumunu güncelle
+        navigate('/login'); // Login sayfasına yönlendir
+        window.location.reload(); // Sayfayı yenile
+    };
 
     const handleProfileClick = () => {
         if (isAuthenticated) {
@@ -62,11 +69,34 @@ const Header = () => {
                         />
                     </Menu.Item>
                     <Menu.Menu position="right">
+                        {isAuthenticated ? (
+                        <Dropdown
+                        item
+                        text="Profile"
+                        style={{ 
+                            width: '180%', 
+                            textAlign: 'center',
+                            display: 'flex', 
+                            justifyContent: 'center',
+                            alignItems: 'center' 
+                        }}
+                        pointing="top right"
+                        className="link item"
+                    >
+                        <Dropdown.Menu >
+                            <Dropdown.Item style={{ innerHeight: '180%', color: 'white', textAlign: 'center' }} onClick={handleProfileClick}>
+                                Profile
+                            </Dropdown.Item>
+                            <Dropdown.Item style={{ innerHeight: '180%', color: 'white', textAlign: 'center' }} onClick={handleLogout}>
+                                Logout
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    ) : (
                         <Menu.Item>
-                        <Button primary onClick={handleProfileClick}>
-                        {isAuthenticated ? "Profile" : "Login"}
-                        </Button>
+                            <Button primary onClick={() => navigate('/login')}>Login</Button>
                         </Menu.Item>
+                    )}
                     </Menu.Menu>
                 </Container>
             </Menu>

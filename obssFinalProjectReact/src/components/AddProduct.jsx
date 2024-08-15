@@ -13,7 +13,6 @@ const AddProduct = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [amount, setAmount] = useState('');
     const [price, setPrice] = useState('');
-    const [discountTag, setDiscountTag] = useState('');
     const [property1, setProperty1] = useState('');
     const [property2, setProperty2] = useState('');
     const [property3, setProperty3] = useState('');
@@ -29,13 +28,11 @@ const AddProduct = () => {
             imageUrl,
             price,
             amount,
-            discountTag: [{ name: discountTag }],
-            category,
-            type,
+            category:type,
         };
 
         switch (category) {
-            case 'electronics':
+            case 'electronic':
                 productData = {
                     ...productData,
                     brand: property1,
@@ -69,7 +66,7 @@ const AddProduct = () => {
                 productData,
             );
             console.log("Product added successfully:", response.data);
-            navigate('/');  // İşlem başarıyla tamamlandığında yönlendirme yapın
+            //navigate('/');  // İşlem başarıyla tamamlandığında yönlendirme yapın
         } catch (error) {
             console.error("Error adding product:", error);
         }
@@ -77,7 +74,7 @@ const AddProduct = () => {
 
     const getTypeOptions = () => {
         switch (category) {
-            case 'electronics':
+            case 'electronic':
                 return [
                     { key: 'laptop', text: 'Laptop', value: 'laptop' },
                     { key: 'cellphone', text: 'CellPhone', value: 'cellphone' },
@@ -105,7 +102,7 @@ const AddProduct = () => {
 
     const getPropertyLabels = () => {
         switch (category) {
-            case 'electronics':
+            case 'electronic':
                 return ['Brand', 'Storage', 'RAM'];
             case 'clothing':
                 return ['Brand', 'Size', 'Color'];
@@ -149,7 +146,7 @@ const AddProduct = () => {
                 <Form.Select
                     label="Category"
                     options={[
-                        { key: 'electronics', text: 'Electronics', value: 'electronics' },
+                        { key: 'electronic', text: 'Electronic', value: 'electronic' },
                         { key: 'clothing', text: 'Clothing', value: 'clothing' },
                         { key: 'book', text: 'Book', value: 'book' },
                     ]}
@@ -181,17 +178,6 @@ const AddProduct = () => {
                         />
                     </>
                 )}
-                <Form.Select
-                    label="Discount Tag"
-                    options={[
-                        { key: 'none', text: 'NONE', value: 'NONE' },
-                        { key: '2of3', text: '2OF3', value: '2OF3' },
-                        { key: '20percent', text: '20PERCENT', value: '20PERCENT' },
-                        { key: '3of5', text: '3OF5', value: '3OF5' },
-                    ]}
-                    value={discountTag}
-                    onChange={(e, { value }) => setDiscountTag(value)}
-                />
                 <Button primary onClick={handleSubmit}>
                     Add Product
                 </Button>
