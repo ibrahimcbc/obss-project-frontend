@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Grid, Header, Button, Card, Image } from 'semantic-ui-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {jwtDecode} from "jwt-decode";
 import * as ProductService from '../services/ProductService';
 import * as UserService from '../services/UserService';
+import { AuthContext } from '../AuthContext';
 
 const UserProfile = () => {
     const navigate = useNavigate(); 
     const { userId } = useParams();
+    const { userId: authUserId } = useContext(AuthContext);  // AuthContext'ten userId'yi alıyoruz
     const [user, setUser] = useState(null);
     const [products, setProducts] = useState([]);
     const [isOwner, setIsOwner] = useState(false);
 
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            if (decodedToken.sub === userId) {
-                setIsOwner(true);
-            }
+        if (authUserId && authUserId.toString() === userId) {
+            setIsOwner(true);
         }
 
         const fetchUserAndProducts = async () => {
@@ -33,7 +31,7 @@ const UserProfile = () => {
         };
 
         fetchUserAndProducts();
-    }, [userId]);
+    }, [userId, authUserId]); 
 
     if (!user) {
         return <div>Loading...</div>;
