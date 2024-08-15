@@ -22,12 +22,6 @@ const Home = () => {
             try {
                 let response;
 
-                if (isAuthenticated) {
-                    response = await ProductService.getFilteredProducts(userId);
-                } else {
-                    response = await ProductService.getAllProducts();
-                }
-
                 if (category && type) {
                     if (category === 'clothing') {
                         response = await ProductService.getClothingByCategory(type);
@@ -45,7 +39,13 @@ const Home = () => {
                         response = await ProductService.getAllBooks();
                     }
                 } else {
-                    response = await ProductService.getAllProducts();
+                    if (isAuthenticated) {
+                        response = await ProductService.getFilteredProducts(userId);
+                        console.log("girdi");
+                    } else {
+                        response = await ProductService.getAllProducts();
+                        console.log("girmedi");
+                    }
                 }
 
                 if (sortOption) {

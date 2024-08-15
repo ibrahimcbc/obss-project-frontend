@@ -13,3 +13,7 @@ export const addToBlacklist = async (authUserId, blockedUserId) => {
 export const removeFromBlacklist = async (authUserId, blockedUserId) => {
     return await axios.put(`${BASE_URL}/${authUserId}/removeFromBlacklist/${blockedUserId}`);
 };
+
+export const checkIfBlocked = async (authUserId,blockedUserId) => {
+    return await axios.get(`${BASE_URL}/${authUserId}/isBlocked/${blockedUserId}`);
+};

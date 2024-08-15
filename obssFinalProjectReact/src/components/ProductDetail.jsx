@@ -23,7 +23,6 @@ const ProductDetail = () => {
 
         const checkIfFavorite = async () => {
             try {
-                console.log('Checking if :', product.dtype,product.category);
                 if (!userId) {
                     setIsFavorite(false);
                     return;
@@ -70,9 +69,9 @@ const ProductDetail = () => {
                     </Grid.Column>
                     <Grid.Column width={10}>
                         <Header as='h1'>{product.title}</Header>
-                        <Header as='h3'>Owner: {product.ownerUsername}</Header>
+                        <Header as='h3'>Owner: {product.userId}</Header>
                         <Header as='h4'>Price: ${product.price}</Header>
-                        <Header as='h4'>Average Score: {product.averageScore} / 5</Header>
+                        <Header as='h4'>Average Score: {product.score} / 5</Header>
                         <Button primary>Add to Bucket</Button>
                         <Button secondary onClick={handleFavoriteToggle}>
                                 {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
@@ -85,7 +84,7 @@ const ProductDetail = () => {
                         <Segment>
                             <Header as='h3'>Product Explanation</Header>
                             <p style={{color:"black"}}>{product.explanation}</p>
-                            <p style={{color:"black"}}>Category: {product.dtype}</p>
+                            <p style={{color:"black"}}>Category: {product.category}</p>
                             <p style={{color:"black"}}>Type: {product.category}</p>
                         </Segment>
                     </Grid.Column>

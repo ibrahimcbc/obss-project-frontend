@@ -56,3 +56,7 @@ export const getProductById = async (id) => {
 export const getProductsByUserId = async (userId) => {
     return await axios.get(`${BASE_URL}/products/users/${userId}`);
 };
+
+export const getFilteredProducts = (userId) => {
+    return axios.get(`${BASE_URL}/products/filtered?userId=${userId}`);
+};

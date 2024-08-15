@@ -12,9 +12,11 @@ const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
 
     useEffect(() => {
-        const localToken = localStorage.getItem('token');
+        const fetchToken = async () => {
+            const localToken = localStorage.getItem('token');
         if (localToken) {
             try {
+                console.log("babammm");
                 const decoded = jwtDecode(localToken);
                 setIsAuthenticated(true);
                 setUserId(decoded.userId); // JWT'den userId'yi alın
@@ -31,7 +33,10 @@ const AuthProvider = ({ children }) => {
             setUserId(null);
             setRoles([]);
         }
-    }, []);
+    };
+
+    fetchToken(); // Asenkron işlemi çağır
+}, []);
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, userId, roles, token, setIsAuthenticated }}>
