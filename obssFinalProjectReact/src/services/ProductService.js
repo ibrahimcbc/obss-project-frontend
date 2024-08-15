@@ -11,11 +11,11 @@ export const getAllClothing = async () => {
 };
 
 export const getAllElectronics = async () => {
-    return await axios.get(`${BASE_URL}/electronics`);
+    return await axios.get(`${BASE_URL}/electronic`);
 };
 
 export const getAllBooks = async () => {
-    return await axios.get(`${BASE_URL}/books`);
+    return await axios.get(`${BASE_URL}/book`);
 };
 
 export const getClothingByCategory = async (category) => {
@@ -23,11 +23,11 @@ export const getClothingByCategory = async (category) => {
 };
 
 export const getElectronicsByCategory = async (category) => {
-    return await axios.get(`${BASE_URL}/electronics/category/${category}`);
+    return await axios.get(`${BASE_URL}/electronic/category/${category}`);
 };
 
 export const getBooksByCategory = async (category) => {
-    return await axios.get(`${BASE_URL}/books/category/${category}`);
+    return await axios.get(`${BASE_URL}/book/category/${category}`);
 };
 
 export const sortProducts = async ({ sortBy, order }) => {

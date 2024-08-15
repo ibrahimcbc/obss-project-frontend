@@ -9,15 +9,17 @@ const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userId, setUserId] = useState(null);
     const [roles, setRoles] = useState([]);
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
+        const localToken = localStorage.getItem('token');
+        if (localToken) {
             try {
-                const decoded = jwtDecode(token);
+                const decoded = jwtDecode(localToken);
                 setIsAuthenticated(true);
                 setUserId(decoded.userId); // JWT'den userId'yi alın
                 setRoles(decoded.roles || []); // JWT'den rolleri alın
+                setToken(localToken);
             } catch (error) {
                 console.error('Invalid token:', error);
                 setIsAuthenticated(false);
@@ -32,7 +34,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, userId, roles }}>
+        <AuthContext.Provider value={{ isAuthenticated, userId, roles, token, setIsAuthenticated }}>
             {children}
         </AuthContext.Provider>
     );

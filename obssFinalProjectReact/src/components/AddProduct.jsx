@@ -5,7 +5,7 @@ import { AuthContext } from '../AuthContext';
 import axios from 'axios';
 
 const AddProduct = () => {
-    const { userId } = useContext(AuthContext);
+    const { userId, token } = useContext(AuthContext);
     const [category, setCategory] = useState('');
     const [type, setType] = useState('');
     const [title, setTitle] = useState('');
@@ -20,7 +20,9 @@ const AddProduct = () => {
 
     const navigate = useNavigate();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Bu satırı en başta yerleştiriyoruz
+
         let productData = {
             title,
             explanation,
@@ -29,7 +31,7 @@ const AddProduct = () => {
             amount,
             discountTag: [{ name: discountTag }],
             category,
-            type, // Type is included in product data
+            type,
         };
 
         switch (category) {
@@ -49,7 +51,7 @@ const AddProduct = () => {
                     color: property3,
                 };
                 break;
-            case 'books':
+            case 'book':
                 productData = {
                     ...productData,
                     author: property1,
@@ -62,12 +64,14 @@ const AddProduct = () => {
         }
 
         try {
-            let apiUrl = `http://localhost:8080/api/products/${category}/${userId}`;
-            await axios.post(apiUrl, productData);
-            navigate('/');
+            const response = await axios.post(
+                `http://localhost:8080/api/${category}/${userId}`,  // Uygun endpoint'i ekleyin
+                productData,
+            );
+            console.log("Product added successfully:", response.data);
+            navigate('/');  // İşlem başarıyla tamamlandığında yönlendirme yapın
         } catch (error) {
-            console.error('Error adding product:', error);
-            alert('There was an error adding the product.');
+            console.error("Error adding product:", error);
         }
     };
 
@@ -86,7 +90,7 @@ const AddProduct = () => {
                     { key: 'pants', text: 'Pants', value: 'pants' },
                     { key: 'jacket', text: 'Jacket', value: 'jacket' },
                 ];
-            case 'books':
+            case 'book':
                 return [
                     { key: 'novel', text: 'Novel', value: 'novel' },
                     { key: 'story', text: 'Story', value: 'story' },
@@ -105,7 +109,7 @@ const AddProduct = () => {
                 return ['Brand', 'Storage', 'RAM'];
             case 'clothing':
                 return ['Brand', 'Size', 'Color'];
-            case 'books':
+            case 'book':
                 return ['Author', 'Genre', 'Page Number'];
             default:
                 return [];
@@ -147,7 +151,7 @@ const AddProduct = () => {
                     options={[
                         { key: 'electronics', text: 'Electronics', value: 'electronics' },
                         { key: 'clothing', text: 'Clothing', value: 'clothing' },
-                        { key: 'books', text: 'Books', value: 'books' },
+                        { key: 'book', text: 'Book', value: 'book' },
                     ]}
                     value={category}
                     onChange={(e, { value }) => setCategory(value)}
