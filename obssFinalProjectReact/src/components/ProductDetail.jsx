@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect , useContext } from 'react';
+import { useParams,useNavigate } from 'react-router-dom';
 import * as ProductService from '../services/ProductService';
 import { Container, Image, Header, Button, Grid, Segment } from 'semantic-ui-react';
+import { AuthContext } from '../AuthContext';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const {userId} = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -17,8 +21,41 @@ const ProductDetail = () => {
             }
         };
 
+        const checkIfFavorite = async () => {
+            try {
+                console.log('Checking if :', product.dtype,product.category);
+                if (!userId) {
+                    setIsFavorite(false);
+                    return;
+                }
+                const response = await ProductService.checkIfFavorite(id, userId);
+                setIsFavorite(response.data);
+            } catch (error) {
+                console.error('Error checking if favorite:', error);
+            }
+        };
+        
         fetchProduct();
+        checkIfFavorite();
     }, [id]);
+
+    const handleFavoriteToggle = async () => {
+        try {
+            if(!userId) {
+                navigate('/login');
+            }
+            else{
+                if (isFavorite) {
+                    await ProductService.removeFromFavorites(id, userId);
+                } else {
+                    await ProductService.addToFavorites(id, userId);
+                }
+                setIsFavorite(!isFavorite);
+            }
+        } catch (error) {
+            console.error('Error updating favorites:', error);
+        }
+    };
 
     if (!product) {
         return <div>Loading...</div>;
@@ -37,7 +74,10 @@ const ProductDetail = () => {
                         <Header as='h4'>Price: ${product.price}</Header>
                         <Header as='h4'>Average Score: {product.averageScore} / 5</Header>
                         <Button primary>Add to Bucket</Button>
-                        <Button secondary>Add to Favorites</Button>
+                        <Button secondary onClick={handleFavoriteToggle}>
+                                {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                        </Button>
+
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
@@ -45,7 +85,6 @@ const ProductDetail = () => {
                         <Segment>
                             <Header as='h3'>Product Explanation</Header>
                             <p style={{color:"black"}}>{product.explanation}</p>
-                            <Header as='h4'>Product Tags</Header>
                             <p style={{color:"black"}}>Category: {product.dtype}</p>
                             <p style={{color:"black"}}>Type: {product.category}</p>
                         </Segment>

@@ -37,6 +37,18 @@ export const sortProducts = async (sortOption) => { // Destructuring yerine doğ
     return await axios.get(`${BASE_URL}/products/sort?sortBy=${sortBy}&order=${order}`);
 };
 
+export const addToFavorites = async (productId,userId) => {
+    return await axios.put(`${BASE_URL}/users/${userId}/addToFavoritelist/${productId}`);
+};
+
+export const removeFromFavorites = async (productId,userId) => {
+    return await axios.put(`${BASE_URL}/users/${userId}/removeFavoritelist/${productId}`);
+};
+
+export const checkIfFavorite = async (productId,userId) => {
+    return await axios.get(`${BASE_URL}/users/${userId}/isFavorite/${productId}`);
+};
+
 export const getProductById = async (id) => {
     return await axios.get(`${BASE_URL}/products/${id}`);
 };
