@@ -44,12 +44,10 @@ const UserProfile = () => {
                     <Grid.Column width={10}>
                         <Header as='h1'>{user.name} {user.surname}</Header>
                         <Header as='h5'>@{user.username}</Header>
-                        <Header as='h4'>Followers: {user.followers.length}</Header>
                     </Grid.Column>
                     <Grid.Column width={6} textAlign='right'>
                         <Header as='h2'>Average Review Score: {user.averageScore}</Header>
                         <Button color='red'>Block User</Button>
-                        <Button secondary>Follow</Button>
                         {isOwner && <Button primary onClick={() => navigate('/add-product')}>Add Product</Button>}
                     </Grid.Column>  
                 </Grid.Row>
